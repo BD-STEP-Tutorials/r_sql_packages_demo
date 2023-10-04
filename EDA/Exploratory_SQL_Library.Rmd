@@ -1,5 +1,5 @@
 ---
-title: "R Exploratory Analysis and Pipeline Building"
+title: "R and SQL Libraries"
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
 
@@ -8,15 +8,11 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 
 # R Exploratory Analysis and Pipeline Building
 
--   This presentation will expand upon the *Good Practices in Reproducible Data Science* presented at the last BD-STEP Roundtable.
+-   This presentation will expand upon the Good Practices in Reproducible Data Science presented at previous BD-STEP Presentations.
 
--   Using R (and a bit of SQL) this interactive presentation will transform a data exploration exercise into a more easily systematic data pipeline.
+-   Using R and SQL this presentation will explore implementing SQL Queries more seamlessly into your R/Rmd files.
 
--   You (the fellow) will be exploring data and filling in certain snippets of code within the R Markdown file to complete the data pipeline in SQL and R.
-
--   The data pipeline will consist of .R pipelines as well as a batch file to execute them in chronological order.
-
--   By the end of this, you should have a completed pipeline that will produce the 'best' producing ML algorithm and metrics for predicting Outcome/Diabetes.
+-   The data pipeline will consist of .Rmd files.
 
 ## Pima Indians Diabetes Data
 
@@ -29,19 +25,13 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 The function *library()* loads and attaches add-on packages to the session.
 
 ```{r}
-library(tidyr)
+library(DBI)
+#library(RODBC)
+#library(VINCI)
+library(dbplyr)
 library(tidyverse)
 library(ggplot2)
-library(GGally)
-library(caret) 
 library(duckdb)
-library(pROC)
-library(xgboost)
-library(kernlab)
-library(optparse)
-library(gbm)
-library(caTools)
-library(RANN)
 ```
 
 ## Importing the Dataset
