@@ -28,7 +28,7 @@
 				"ms-python.vscode-pylance",
 				"vsls-contrib.codetour",
 				// Add SQLite extension
-				"alexcvzz.vscode-sqlite"
+				"yy0931.vscode-sqlite3-editor"
 			]
 		}
 	},
