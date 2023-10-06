@@ -48,16 +48,15 @@ This method works best if you already know how to write SQL queries and are work
 
 Create a new RMarkdown chunk, but change its heading to '{sql, connection = con, output.var = "Results_Table"}' 
 instead of the default '{r}'
-``` {sql, connection = con, output.var = "OMOP_COHORT_1"}
+``` {sql, connection = con, output.var = "PATIENT_COHORT_1"}
 SELECT 
-  PERSON_ID, YEAR_OF_BIRTH, LOCATION_ID, CONCEPT_NAME as ETHNICITY_VAL
+  patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender, encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes
 FROM 
-  ORD_OMOPAcademy.Src.OMOP_PERSON as PERSON
+   [synthetic.patients] as patient
 LEFT JOIN
-  ORD_OMOPAcademy.Src.OMOP_CONCEPT as CONCEPT ON CONCEPT.CONCEPT_ID = PERSON.ETHNICITY_CONCEPT_ID
+   [synthetic.encounters] as encounter ON encounter.PATIENT = patient.patient
 WHERE 
-  YEAR_OF_BIRTH > 1990 AND
-  CONCEPT_NAME like 'Hispanic or Latino'
+   patient.gender like 'M'
 ```
 
 RStudio can natively read SQL script when it's in a markdown chunk set to '{sql}'.

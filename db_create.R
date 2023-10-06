@@ -9,7 +9,7 @@ setwd('/workspaces/R_SQL_Demo/database')
 
 mydb <- dbConnect(RSQLite::SQLite(), "synthetic.db")
 
-dbWriteTable(mydb, "patients", patients)
-dbWriteTable(mydb, "encounters", encounters)
+dbWriteTable(mydb, "synthetic.patients", patients)
+dbWriteTable(mydb, "synthetic.encounters", encounters)
 
 dbDisconnect(mydb)
