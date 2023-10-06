@@ -87,10 +87,10 @@ where <- "WHERE patient.gender like 'M' and encounter.DATE >= '2015-01-01'"
 
 query <- paste(select, from, ljoin, where)
 
-PATIENT_COHORT_2 <- DBI::dbGetQuery(conn = con,
+PATIENT_COHORT_2a <- DBI::dbGetQuery(conn = con,
                                  statement = query)
 
-head(PATIENT_COHORT_2)
+head(PATIENT_COHORT_2a)
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -109,8 +109,8 @@ patient_encounter_by_year_gender <- function(gender, date) {
   return(df)
 }
 
-PATIENT_COHORT_3 <- patient_encounter_by_year_gender('M', '2015-01-01')
-head(PATIENT_COHORT_3)
+PATIENT_COHORT_2b <- patient_encounter_by_year_gender('M', '2015-01-01')
+head(PATIENT_COHORT_2b)
 ```
 
 ## Method 3
@@ -119,11 +119,9 @@ not yet familiar with SQL Scripting. The dplyr package was actually designed to 
 so you may find it easy to learn the SQL-equivalent of dplyr functions. 
 
 ```{r}
-con <- DBI::dbConnect(odbc::odbc(), "VHACDWRB01_17")
-
 OMOP_COHORT_3 <- 
-  tbl(src = con, from = "ORD_OMOPAcademy.Src.OMOP_PERSON")
-
-ch <- odbcDriverConnect('driver={SQL Server}; server=vhacdwrb01; database=ORD_OMOPAcademy; trusted_connection=yes')
+  tbl(src = con, from = "synthetic.patients") %>%
+  filter(gender == 'M') %>%
+  select(patient, birthdate, race, ethnicity, gender) 
 
 ```
