@@ -118,10 +118,13 @@ This method is the easiest for those who are comfortable working with the dplyr 
 not yet familiar with SQL Scripting. The dplyr package was actually designed to replicate the most common SQL commands,
 so you may find it easy to learn the SQL-equivalent of dplyr functions. 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 OMOP_COHORT_3 <- 
   tbl(src = con, from = "synthetic.patients") %>%
   filter(gender == 'M') %>%
-  select(patient, birthdate, race, ethnicity, gender) 
-
+  select(patient, birthdate, race, ethnicity, gender) %>%
+  left_join(y = tbl(src = con, "synthetic.encounters"),
+            by = c('patient' = 'PATIENT')) %>%
+  filter(DATE >= '2015-01-01') %>%
+  collect()
 ```
