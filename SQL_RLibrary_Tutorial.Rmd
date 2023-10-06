@@ -48,15 +48,15 @@ This method works best if you already know how to write SQL queries and are work
 
 Create a new RMarkdown chunk, but change its heading to '{sql, connection = con, output.var = "Results_Table"}' 
 instead of the default '{r}'
-``` {sql, connection = con, output.var = "PATIENT_COHORT_1"}
+``` {sql, connection = con, output.var = "PATIENT_COHORT_1", warning=FALSE}
 SELECT 
-  patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender, encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes
+  patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender, encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes, encounter.DATE as encounter_date
 FROM 
    [synthetic.patients] as patient
 LEFT JOIN
    [synthetic.encounters] as encounter ON encounter.PATIENT = patient.patient
 WHERE 
-   patient.gender like 'M'
+   patient.gender like 'M' and encounter.DATE >= '2015-01-01' 
 ```
 
 RStudio can natively read SQL script when it's in a markdown chunk set to '{sql}'.
@@ -67,7 +67,7 @@ table(s) in our database.
 You can now work with this data like you would with any other data frame.
 
 ``` {r message=FALSE, warning=FALSE}
-head(OMOP_COHORT)
+head(PATIENT_COHORT_1)
 ```
 
 ## Method 2:
@@ -78,28 +78,29 @@ programmatically change the SQL query, which is best done with the R script.
 Though not required for this example we'll demo how to build the SQL query in multiple pieces and then
 join them together as a single piece of text. This will allow us to loop through and modify the method
 if you're making use of loops or other R objects. 
-
 ```{r message=FALSE, warning=FALSE}
-select <- "SELECT PERSON_ID, YEAR_OF_BIRTH, LOCATION_ID, CONCEPT_NAME as ETHNICITY_VAL"
-from <- "FROM ORD_OMOPAcademy.Src.OMOP_PERSON as PERSON"
-ljoin <- "LEFT JOIN ORD_OMOPAcademy.Src.OMOP_CONCEPT as CONCEPT ON CONCEPT.CONCEPT_ID = PERSON.ETHNICITY_CONCEPT_ID"
-where <- "WHERE YEAR_OF_BIRTH > 1990 AND CONCEPT_NAME like 'Hispanic or Latino'"
+select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender,
+encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes, encounter.DATE as encounter_date"
+from <- "FROM [synthetic.patients] as patient"
+ljoin <- "LEFT JOIN [synthetic.encounters] as encounter ON encounter.PATIENT = patient.patient"
+where <- "WHERE patient.gender like 'M' and encounter.DATE >= '2015-01-01'"
 
 query <- paste(select, from, ljoin, where)
 
-OMOP_COHORT_2 <- DBI::dbGetQuery(conn = con,
+PATIENT_COHORT_2 <- DBI::dbGetQuery(conn = con,
                                  statement = query)
 
-head(OMOP_COHORT_2)
+head(PATIENT_COHORT_2)
 ```
 
 ```{r message=FALSE, warning=FALSE}
-ord_person_ethnicity <- function(ethnicity) {
-  select <- "SELECT PERSON_ID, YEAR_OF_BIRTH, LOCATION_ID, CONCEPT_NAME as ETHNICITY_VAL"
-  from <- "FROM ORD_OMOPAcademy.Src.OMOP_PERSON as PERSON"
-  ljoin <- "LEFT JOIN ORD_OMOPAcademy.Src.OMOP_CONCEPT as CONCEPT ON CONCEPT.CONCEPT_ID = PERSON.ETHNICITY_CONCEPT_ID"
-  where <- paste0("WHERE YEAR_OF_BIRTH > 1990 AND CONCEPT_NAME like '", ethnicity, "'")
-  
+patient_encounter_by_year_gender <- function(gender, date) {
+  select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender,
+  encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes, encounter.DATE as encounter_date"
+  from <- "FROM [synthetic.patients] as patient"
+  ljoin <- "LEFT JOIN [synthetic.encounters] as encounter ON encounter.PATIENT = patient.patient"
+  where <- paste0("WHERE patient.gender like '", gender, "' AND encounter.DATE >= '", data,"'")
+
   query <- paste(select, from, ljoin, where)
   
   df <- DBI::dbGetQuery(conn = con,
@@ -108,11 +109,8 @@ ord_person_ethnicity <- function(ethnicity) {
   return(df)
 }
 
-OMOP_COHORT_2 <- ord_person_ethnicity('Hispanic or Latino')
-head(OMOP_COHORT_2)
-```
-
-
+PATIENT_COHORT_3 <- patient_encounter_by_year_gender('M', '2015-01-01')
+head(PATIENT_COHORT_3)
 ```
 
 ## Method 3
