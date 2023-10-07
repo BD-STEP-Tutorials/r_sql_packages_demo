@@ -28,9 +28,9 @@ RUN install2.r --error --skipinstalled -n -1 \
         modeltools \
     && R -q -e 'remotes::install_github("https://github.com/dcomtois/summarytools/tree/0-8-9")'
 
-
-COPY db_create.R /
-RUN Rscript /db_create.R && rm -rf db_create.R
+RUN mkdir -p /tmp
+COPY db_create.R /tmp
+RUN Rscript /tmp/db_create.R && rm -rf /tmp/db_create.R
 
 #COPY install_packages.R /tmp/downloaded_packages
 #RUN Rscript /tmp/downloaded_packages/install_packages.R && rm -rf /tmp/downloaded_packages
