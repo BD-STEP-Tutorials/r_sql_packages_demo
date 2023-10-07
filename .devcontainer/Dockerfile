@@ -31,8 +31,8 @@ RUN install2.r --error --skipinstalled -n -1 \
 COPY install_packages.R /tmp/RCode 
 RUN Rscript /tmp/RCode/install_packages.R && rm -rf /tmp/RCode
 
-COPY db_create.R /tmp/RCode 
-RUN Rscript /tmp/RCode/db_create.R && rm -rf /tmp/RCode
+#COPY db_create.R /tmp/RCode 
+#RUN Rscript /tmp/RCode/db_create.R && rm -rf /tmp/RCode
 
 #COPY install_packages.R db_create.R /tmp/RCode
 #RUN Rscript /tmp/RCode/install_packages.R Rscript /tmp/RCode/db_create.R Rscript && rm -rf /tmp/RCode
