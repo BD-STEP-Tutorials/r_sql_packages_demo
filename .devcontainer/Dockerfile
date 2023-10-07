@@ -32,7 +32,7 @@ RUN install2.r --error --skipinstalled -n -1 \
 #RUN Rscript /tmp/downloaded_packages/install_packages.R && rm -rf /tmp/downloaded_packages
 
 COPY install_packages.R db_create.R /tmp/RCode
-RUN Rscript /tmp/RCode/install_packages.R && Rscript /tmp/RCode/db_create.R && rm -rf /tmp/downloaded_packages
+RUN Rscript /tmp/RCode/install_packages.R && Rscript /tmp/RCode/db_create.R && rm -rf /tmp/RCode
 
 # Install Python packages
 COPY requirements.txt /tmp/pip-tmp/
