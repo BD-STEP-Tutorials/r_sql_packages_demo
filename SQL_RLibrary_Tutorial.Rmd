@@ -176,13 +176,13 @@ FROM
 
 3.  collapse(): turns the query into a table expression, but does not execute the query.
 ```{r message=FALSE, warning=FALSE}
+library(data.table)   # For like function (%like%)
+
 SUB_QUERY_TABLE <- 
   dplyr::tbl(src = con, from = "synthetic.encounters") %>%
   dplyr::select(CODE, DESCRIPTION) %>%
-  dplyr:: group_by(CODE, DESCRIPTION) %>% 
-  dplyr:: distinct() %>%
-  dplyr::collapse()
-
-PATIENT_COHORT_4 <-
-  
+  dplyr::group_by(CODE, DESCRIPTION) %>% 
+  dplyr::filter(DESCRIPTION %like% "Prenatal%") %>%
+  dplyr::distinct() %>%
+  dplyr::collapse() 
 ```
