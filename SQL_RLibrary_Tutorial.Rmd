@@ -30,14 +30,16 @@ source("db_create.R")
 
 ## Making the Connection
 
-1. Manually Create the Connection
+1.  Manually Create the Connection
+
 ```{r message=FALSE, warning=FALSE}
 con <- dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.db", timeout = 10)
 ```
 
-2. Can use the Connections tab
+2.  Can use the Connections tab
 
-3. Can use the VINCI Library - broken as of 10/3/2023
+3.  Can use the VINCI Library - broken as of 10/3/2023
+
 ```{r message=FALSE, warning=FALSE}
 #library(VINCI)
 ```
@@ -177,8 +179,10 @@ FROM
 ```
 
 3.  data.table (%like%) operator: Allows you to use like function
-  - can use '%' as an anchor like in SQL when searching word
-  - need to call in the library(data.table)
+
+-   can use '%' as an anchor like in SQL when searching word
+-   need to call in the library(data.table)
+
 ```{r message=FALSE, warning=FALSE}
 SUB_QUERY_TABLE <- 
   dplyr::tbl(src = con, from = "synthetic.encounters") %>%
@@ -191,6 +195,7 @@ SUB_QUERY_TABLE <-
 ### Method 4: Use a local/in-memory database management system to run SQL queries
 
 Using datatables already read into memory of R, and create a local database to use SQL queries to query from.
+
 ```{r message=FALSE, warning=FALSE}
 # Create an in-memory Database Management System
 con <- dbConnect(duckdb())
