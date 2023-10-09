@@ -119,7 +119,7 @@ PATIENT_COHORT_2b <- patient_encounter_by_year_gender('M', '2015-01-01')
 head(PATIENT_COHORT_2b)
 ```
 
-### Method 3: Use dplyr to query the dataset with any SQL
+### Method 3: Use dplyr to query the dataset with translated SQL queries
 
 This method is the easiest for those who are comfortable working with the dplyr and tidyverse functions but not yet familiar with SQL Scripting. The
 dplyr package was actually designed to replicate the most common SQL commands, so you may find it easy to learn the SQL-equivalent of dplyr functions.
@@ -188,7 +188,9 @@ SUB_QUERY_TABLE <-
   dplyr::show_query()
 ```
 
-### Method 4: 
+### Method 4: Use a local/in-memory database management system to run SQL queries
+
+Using datatables already read into memory of R, and create a local database to use SQL queries to query from.
 ```{r message=FALSE, warning=FALSE}
 # Create an in-memory Database Management System
 con <- dbConnect(duckdb())
