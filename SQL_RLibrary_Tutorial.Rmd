@@ -181,8 +181,17 @@ library(data.table)   # For like function (%like%)
 SUB_QUERY_TABLE <- 
   dplyr::tbl(src = con, from = "synthetic.encounters") %>%
   dplyr::select(CODE, DESCRIPTION) %>%
-  dplyr::group_by(CODE, DESCRIPTION) %>% 
   dplyr::filter(DESCRIPTION %like% "Prenatal%") %>%
-  dplyr::distinct() %>%
-  dplyr::collapse() 
+  distinct() %>%
+  collapse()
+```
+
+``` {r}
+PATIENT_COHORT_4 <-
+  dplyr::tbl(src = con, from = "synthetic.patients") %>%
+  dplyr::left_join(y = tbl(src = con, "synthetic.encounters"), 
+            by = c('patient' = 'PATIENT')) %>% 
+  
+  dplyr::select(ssn, first, last) %>%
+  dplyr::show_query()
 ```
