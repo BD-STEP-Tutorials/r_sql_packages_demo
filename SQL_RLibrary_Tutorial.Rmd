@@ -20,9 +20,9 @@ with and mimic SQL queries, which can be a very convenient way to work with a SQ
 ```{r message=FALSE, warning=FALSE}
 library(DBI) # Basic database infrastucture for R, let's R talk to other databases (MS SQL, MySQL, Oracle, Etc.)
 #library(RODBC) # Pre-dates the odbc package, but not compliant with DBI and is no longer in active development
-#library(VINCI)
 library(odbc) # Implements DBI's methods for ODBC connections, which MS SQL uses
 library(dbplyr) # implements the specifics of the dplyr operations for remote SQL table
+library(data.table) # For like function (%like%)
 library(dplyr)
 library(duckdb)
 source("db_create.R")
@@ -30,15 +30,18 @@ source("db_create.R")
 
 ## Making the Connection
 
-### Manually Create the Connection
+1. Manually Create the Connection
 
 ```{r message=FALSE, warning=FALSE}
 con <- dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.db", timeout = 10)
 ```
 
-### Can use the Connections tab
+2. Can use the Connections tab
 
-### Can use the VINCI Library - broken as of 10/3/2023
+3. Can use the VINCI Library - broken as of 10/3/2023
+```{r message=FALSE, warning=FALSE}
+#library(VINCI)
+```
 
 ## Opposite tools
 
@@ -174,24 +177,14 @@ FROM
   [dim.encounter_desc]
 ```
 
-3.  collapse(): turns the query into a table expression, but does not execute the query.
+3.  data.table (%like%) operator: Allows you to use like function
+  - can use '%' as an anchor like in SQL when searching word
+  - need to call in the library(data.table)
 ```{r message=FALSE, warning=FALSE}
-library(data.table)   # For like function (%like%)
-
 SUB_QUERY_TABLE <- 
   dplyr::tbl(src = con, from = "synthetic.encounters") %>%
-  dplyr::select(CODE, DESCRIPTION) %>%
   dplyr::filter(DESCRIPTION %like% "Prenatal%") %>%
-  distinct() %>%
-  collapse()
-```
-
-``` {r}
-PATIENT_COHORT_4 <-
-  dplyr::tbl(src = con, from = "synthetic.patients") %>%
-  dplyr::left_join(y = tbl(src = con, "synthetic.encounters"), 
-            by = c('patient' = 'PATIENT')) %>% 
-  
-  dplyr::select(ssn, first, last) %>%
+  dplyr::select(CODE, DESCRIPTION) %>%
+  dplyr::distinct() %>%
   dplyr::show_query()
 ```
