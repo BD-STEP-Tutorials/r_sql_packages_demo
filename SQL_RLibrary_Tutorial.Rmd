@@ -150,5 +150,13 @@ PATIENT_COHORT_3 <-
   dplyr::select(patient, birthdate, race, ethnicity, gender,
                 DESCRIPTION, REASONDESCRIPTION, DATE) %>% # select certain variables (SELECT)
   dplyr::filter(gender == 'M', DATE >= '2015-01-01') %>% # filter our main table by variables (WHERE)
-  dplyr::collect() 
+  dplyr::show_query() # shows the query in SQL equivalent
 ```
+
+#### Helper functions with dplyr
+- collect(): executes a query and returns the results back to R in a table. Similar to DBI::dbGetQuery()
+
+- compute(): executes a query and stores the results in a temporary table in the database based on the result of the query.
+
+- collapse(): turns the query into a table expression, but does not execute the query. 
+
