@@ -24,15 +24,15 @@ library(duckdb)
 ``` 
 
 ## Making the Connection
+
+### Manually Create the Connection
 ``` {r message=FALSE, warning=FALSE}
-# Manually Create the Connection
 setwd('/workspaces/R_SQL_Demo/database')
 con <- dbConnect(RSQLite::SQLite(), "synthetic.db", timeout = 10)
 ```
-Can use the Connections tab
-![new connection screenshot](H:/Pictures/Capture.png)
+### Can use the Connections tab
 
-Can use the VINCI Library - broken as of 10/3/2023
+### Can use the VINCI Library - broken as of 10/3/2023
 
 ## Opposite tools
 R is great at complicated algorithms for plotting, fitting models, and general data analysis. Not too great at managing
@@ -43,7 +43,7 @@ general data analysis.
 
 Therefore, you want to filter the big data as much as possible before you bring it into R.0
 
-## Method 1: Write a SQL statement and execute it in RStudio
+### Method 1: Write a SQL statement and execute it via RStudio Markdown File
 This method works best if you already know how to write SQL queries and are working in an RMarkdown file.
 
 Create a new RMarkdown chunk, but change its heading to '{sql, connection = con, output.var = "Results_Table"}' 
@@ -70,7 +70,7 @@ You can now work with this data like you would with any other data frame.
 head(PATIENT_COHORT_1)
 ```
 
-## Method 2:
+### Method 2: Write a SQL statement in an R function
 You're not always able to write a SQL statement in a dedicated chunk. For instance, you might be looping 
 through some data and need to execute a SQL query based on a variable value. This means you'd need to 
 programmatically change the SQL query, which is best done with the R script. 
@@ -113,18 +113,17 @@ PATIENT_COHORT_2b <- patient_encounter_by_year_gender('M', '2015-01-01')
 head(PATIENT_COHORT_2b)
 ```
 
-## Method 3
+### Method 3: Use dplyr to query the dataset with any SQL
 This method is the easiest for those who are comfortable working with the dplyr and tidyverse functions but
 not yet familiar with SQL Scripting. The dplyr package was actually designed to replicate the most common SQL commands,
 so you may find it easy to learn the SQL-equivalent of dplyr functions. 
-
 ```{r message=FALSE, warning=FALSE}
-OMOP_COHORT_3 <- 
-  tbl(src = con, from = "synthetic.patients") %>%
-  filter(gender == 'M') %>%
-  select(patient, birthdate, race, ethnicity, gender) %>%
-  left_join(y = tbl(src = con, "synthetic.encounters"),
-            by = c('patient' = 'PATIENT')) %>%
-  filter(DATE >= '2015-01-01') %>%
-  collect()
+PATIENT_COHORT_3 <- 
+  dplyr::tbl(src = con, from = "synthetic.patients") %>% # establish connection, grab our main table (FROM)
+  dplyr::left_join(y = tbl(src = con, "synthetic.encounters"), # establish connection to join another table (LEFT JOIN)
+            by = c('patient' = 'PATIENT')) %>% # by certain keys (ON)
+  dplyr::select(patient, birthdate, race, ethnicity, gender,
+                DESCRIPTION, REASONDESCRIPTION, DATE) %>% # select certain variables (SELECT)
+  dplyr::filter(gender == 'M', DATE >= '2015-01-01') %>% # filter our main table by variables (WHERE)
+  dplyr::collect() 
 ```
