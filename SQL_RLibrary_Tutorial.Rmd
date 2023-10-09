@@ -31,7 +31,6 @@ source("db_create.R")
 ## Making the Connection
 
 1. Manually Create the Connection
-
 ```{r message=FALSE, warning=FALSE}
 con <- dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.db", timeout = 10)
 ```
@@ -187,4 +186,32 @@ SUB_QUERY_TABLE <-
   dplyr::select(CODE, DESCRIPTION) %>%
   dplyr::distinct() %>%
   dplyr::show_query()
+```
+
+### Method 4: 
+```{r message=FALSE, warning=FALSE}
+# Create an in-memory Database Management System
+con <- dbConnect(duckdb())
+
+# Register R dataframes as a virtual table in the 
+duckdb_register(con, name = "synthetic_encounters", df = encounters)
+duckdb_register(con, name = "synthetic_patients", df = patients)
+
+# write your query in SQL
+select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender,
+encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes, encounter.DATE as encounter_date"
+from <- "FROM synthetic_patients as patient"
+ljoin <- "LEFT JOIN synthetic_encounters as encounter ON encounter.PATIENT = patient.patient"
+where <- "WHERE patient.gender like 'M' and encounter.DATE >= '2015-01-01'"
+
+query <- paste(select, from, ljoin, where)
+
+# Send the SQL query via the connection to the virtual table and fetch the result
+PATIENT_COHORT_4 <- 
+  con %>% 
+  dbSendQuery(query) %>%
+  dbFetch()
+
+# Close the connection and free resources (memory) 
+dbDisconnect(con, shutdown=TRUE)
 ```
