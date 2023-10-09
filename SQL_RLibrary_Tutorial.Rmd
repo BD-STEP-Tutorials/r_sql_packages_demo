@@ -160,14 +160,29 @@ dplyr::compute(name="dim.encounter_desc")
 ```
 
 Checking the current list of tables
+
 ```{r message=FALSE, warning=FALSE}
 DBI::dbListTables(conn = con)
 ```
+
 Not stored in R, but rather our SQL database
+
 ```{sql, connection = con, warning=FALSE}
 SELECT
   *
 FROM
   [dim.encounter_desc]
 ```
+
 3.  collapse(): turns the query into a table expression, but does not execute the query.
+```{r message=FALSE, warning=FALSE}
+SUB_QUERY_TABLE <- 
+  dplyr::tbl(src = con, from = "synthetic.encounters") %>%
+  dplyr::select(CODE, DESCRIPTION) %>%
+  dplyr:: group_by(CODE, DESCRIPTION) %>% 
+  dplyr:: distinct() %>%
+  dplyr::collapse()
+
+PATIENT_COHORT_4 <-
+  
+```
