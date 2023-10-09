@@ -5,7 +5,7 @@ date: "2023-09-20"
 output: html_document
 editor_options: 
   markdown: 
-    wrap: 72
+    wrap: 200
 ---
 
 ```{r setup, include=FALSE}
@@ -14,10 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Packages
 
-Connecting to and working with SQL databases in R generally requires two
-packages, **odbc** and **DBI**. The **dbplyr** is designed to help
-interface with and mimic SQL queries, which can be a very convenient way
-to work with a SQL database even if you are familiar with R but not SQL.
+Connecting to and working with SQL databases in R generally requires two packages, **odbc** and **DBI**. The **dbplyr** is designed to help interface with and mimic SQL queries, which can be a very
+convenient way to work with a SQL database even if you are familiar with R but not SQL.
 
 ```{r message=FALSE, warning=FALSE}
 library(DBI) # Basic database infrastucture for R, let's R talk to other databases (MS SQL, MySQL, Oracle, Etc.)
@@ -25,7 +23,7 @@ library(DBI) # Basic database infrastucture for R, let's R talk to other databas
 #library(VINCI)
 library(odbc) # Implements DBI's methods for ODBC connections, which MS SQL uses
 library(dbplyr) # implements the specifics of the dplyr operations for remote SQL table
-library(tidyverse)
+library(dplyr)
 library(duckdb)
 source("db_create.R")
 ```
@@ -44,23 +42,17 @@ con <- dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.d
 
 ## Opposite tools
 
-R is great at complicated algorithms for plotting, fitting models, and
-general data analysis. Not too great at managing big datasets.
+R is great at complicated algorithms for plotting, fitting models, and general data analysis. Not too great at managing big datasets.
 
-SQL is great at managing big datasets. Not too great at complicated
-algorithms for plotting, fitting models, and general data analysis.
+SQL is great at managing big datasets. Not too great at complicated algorithms for plotting, fitting models, and general data analysis.
 
-Therefore, you want to filter the big data as much as possible before
-you bring it into R.0
+Therefore, you want to filter the big data as much as possible before you bring it into R.0
 
 ### Method 1: Write a SQL statement and execute it via RStudio Markdown File
 
-This method works best if you already know how to write SQL queries and
-are working in an RMarkdown file.
+This method works best if you already know how to write SQL queries and are working in an RMarkdown file.
 
-Create a new RMarkdown chunk, but change its heading to '{sql,
-connection = con, output.var = "Results_Table"}' instead of the default
-'{r}'
+Create a new RMarkdown chunk, but change its heading to '{sql, connection = con, output.var = "Results_Table"}' instead of the default '{r}'
 
 ```{sql, connection = con, output.var = "PATIENT_COHORT_1", warning=FALSE}
 SELECT 
@@ -73,14 +65,10 @@ WHERE
    patient.gender like 'M' and encounter.DATE >= '2015-01-01' 
 ```
 
-RStudio can natively read SQL script when it's in a markdown chunk set
-to '{sql}'. 'output.var' sets the name of the data frame to store the
-results in, which we've called 'Temp_Table'. The text is the SQL script
-required to retrieve and filter the data from the table(s) in our
-database.
+RStudio can natively read SQL script when it's in a markdown chunk set to '{sql}'. 'output.var' sets the name of the data frame to store the results in, which we've called 'Temp_Table'. The text is
+the SQL script required to retrieve and filter the data from the table(s) in our database.
 
-You can now work with this data like you would with any other data
-frame.
+You can now work with this data like you would with any other data frame.
 
 ```{r message=FALSE, warning=FALSE}
 head(PATIENT_COHORT_1)
@@ -88,16 +76,11 @@ head(PATIENT_COHORT_1)
 
 ### Method 2: Write a SQL statement in an R function
 
-You're not always able to write a SQL statement in a dedicated chunk.
-For instance, you might be looping through some data and need to execute
-a SQL query based on a variable value. This means you'd need to
-programmatically change the SQL query, which is best done with the R
-script.
+You're not always able to write a SQL statement in a dedicated chunk. For instance, you might be looping through some data and need to execute a SQL query based on a variable value. This means you'd
+need to programmatically change the SQL query, which is best done with the R script.
 
-Though not required for this example we'll demo how to build the SQL
-query in multiple pieces and then join them together as a single piece
-of text. This will allow us to loop through and modify the method if
-you're making use of loops or other R objects.
+Though not required for this example we'll demo how to build the SQL query in multiple pieces and then join them together as a single piece of text. This will allow us to loop through and modify the
+method if you're making use of loops or other R objects.
 
 ```{r message=FALSE, warning=FALSE}
 select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender,
@@ -136,14 +119,10 @@ head(PATIENT_COHORT_2b)
 
 ### Method 3: Use dplyr to query the dataset with any SQL
 
-This method is the easiest for those who are comfortable working with
-the dplyr and tidyverse functions but not yet familiar with SQL
-Scripting. The dplyr package was actually designed to replicate the most
-common SQL commands, so you may find it easy to learn the SQL-equivalent
-of dplyr functions.
+This method is the easiest for those who are comfortable working with the dplyr and tidyverse functions but not yet familiar with SQL Scripting. The dplyr package was actually designed to replicate
+the most common SQL commands, so you may find it easy to learn the SQL-equivalent of dplyr functions.
 
 ```{r message=FALSE, warning=FALSE}
-PATIENT_COHORT_3 <- 
   dplyr::tbl(src = con, from = "synthetic.patients") %>% # establish connection, grab our main table (FROM)
   dplyr::left_join(y = tbl(src = con, "synthetic.encounters"), # establish connection to join another table (LEFT JOIN)
             by = c('patient' = 'PATIENT')) %>% # by certain keys (ON)
@@ -154,9 +133,36 @@ PATIENT_COHORT_3 <-
 ```
 
 #### Helper functions with dplyr
-- collect(): executes a query and returns the results back to R in a table. Similar to DBI::dbGetQuery()
 
-- compute(): executes a query and stores the results in a temporary table in the database based on the result of the query.
+1.  collect(): executes a query and returns the results back to R in a table. Similar to DBI::dbGetQuery()
 
-- collapse(): turns the query into a table expression, but does not execute the query. 
+```{r message=FALSE, warning=FALSE}
+PATIENT_COHORT_3 <-
+  dplyr::tbl(src = con, from = "synthetic.patients") %>% 
+  dplyr::left_join(y = tbl(src = con, "synthetic.encounters"), 
+            by = c('patient' = 'PATIENT')) %>% 
+  dplyr::select(patient, birthdate, race, ethnicity, gender,
+                DESCRIPTION, REASONDESCRIPTION, DATE) %>% 
+  dplyr::filter(gender == 'M', DATE >= '2015-01-01') %>% 
+  dplyr::collect() 
+```
 
+2.  compute(): executes a query and stores the results in a temporary table in the database based on the result of the query.
+
+```{r message=FALSE, warning=FALSE}
+#DBI::dbRemoveTable(conn = con, name="dim.encounter_desc")
+
+dplyr::tbl(src = con, from = "synthetic.encounters") %>%
+dplyr::select(CODE, DESCRIPTION) %>%
+dplyr:: group_by(CODE, DESCRIPTION) %>% 
+dplyr:: distinct() %>%
+dplyr::compute(name="dim.encounter_desc")
+```
+
+Checking the current list of tables
+
+```{r message=FALSE, warning=FALSE}
+DBI::dbListTables(conn = con)
+```
+
+3.  collapse(): turns the query into a table expression, but does not execute the query.
