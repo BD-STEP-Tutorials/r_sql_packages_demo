@@ -28,7 +28,9 @@ library(duckdb) # For creating local duckdb databases in local memory
 ```
 
 ## Making the Connection
-0. Initialize Databases in Codespace
+
+0.  Initialize Databases in Codespace
+
 ```{r message=FALSE, warning=FALSE}
 source("db_create.R")
 ```
@@ -154,6 +156,8 @@ PATIENT_COHORT_3 <-
                 DESCRIPTION, REASONDESCRIPTION, DATE) %>% 
   dplyr::filter(gender == 'M', DATE >= '2015-01-01') %>% 
   dplyr::collect() 
+
+PATIENT_COHORT_3
 ```
 
 2.  compute(): executes a query and stores the results in a temporary table in the database based on the result of the query.
@@ -168,13 +172,13 @@ dplyr:: distinct() %>%
 dplyr::compute(name="dim.encounter_desc")
 ```
 
-Checking the current list of tables
+Checking the current list of tables within our SQLite Database
 
 ```{r message=FALSE, warning=FALSE}
 DBI::dbListTables(conn = con)
 ```
 
-Not stored in R, but rather our SQL database
+Indicating that we did not stored our previous query in R, but rather our SQLite database
 
 ```{sql, connection = con, warning=FALSE}
 SELECT
@@ -227,4 +231,7 @@ PATIENT_COHORT_4 <-
 
 # Close the connection and free resources (memory) 
 dbDisconnect(con, shutdown=TRUE)
+
+# Check out the variable
+PATIENT_COHORT_4
 ```
