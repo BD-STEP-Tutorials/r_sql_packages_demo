@@ -37,8 +37,9 @@ source("db_create.R")
 con <- dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.db", timeout = 10)
 ```
 
-2.  Can use the Connections tab - Screenshot of VINCI's Connection Tab
+2.  Can use the Connections tab - Screenshot of VINCI's Connection Tab 
 
+![VINCI Broken :(](/workspaces/R_SQL_Demo/misc/img/824e1v.jpg)
 
 3.  Can use the VINCI Library (exclusive to VINCI workspace) - broken as of 10/10/2023 :(
 
