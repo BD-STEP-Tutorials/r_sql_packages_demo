@@ -21,14 +21,17 @@ with and mimic SQL queries, which can be a very convenient way to work with a SQ
 library(DBI) # Basic database infrastucture for R, let's R talk to other databases (MS SQL, MySQL, Oracle, Etc.)
 #library(RODBC) # Pre-dates the odbc package, but not compliant with DBI and is no longer in active development
 library(odbc) # Implements DBI's methods for ODBC connections, which MS SQL uses
-library(dbplyr) # implements the specifics of the dplyr operations for remote SQL table
+library(dbplyr) # Implements the specifics of the dplyr operations for remote SQL table
 library(data.table) # For like function (%like%)
-library(dplyr)
-library(duckdb)
-source("db_create.R")
+library(dplyr) # For working with data frame like objects, both in memory and out of memory
+library(duckdb) # For creating local duckdb databases in local memory
 ```
 
 ## Making the Connection
+0. Initialize Databases in Codespace
+```{r message=FALSE, warning=FALSE}
+source("db_create.R")
+```
 
 1.  Manually Create the Connection
 
@@ -87,8 +90,9 @@ Though not required for this example we'll demo how to build the SQL query in mu
 This will allow us to loop through and modify the method if you're making use of loops or other R objects.
 
 ```{r message=FALSE, warning=FALSE}
-select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender,
-encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes, encounter.DATE as encounter_date"
+select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender, 
+          encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes,
+          encounter.DATE as encounter_date"
 from <- "FROM [synthetic.patients] as patient"
 ljoin <- "LEFT JOIN [synthetic.encounters] as encounter ON encounter.PATIENT = patient.patient"
 where <- "WHERE patient.gender like 'M' and encounter.DATE >= '2015-01-01'"
@@ -103,8 +107,9 @@ head(PATIENT_COHORT_2a)
 
 ```{r message=FALSE, warning=FALSE}
 patient_encounter_by_year_gender <- function(gender, date) {
-  select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender,
-  encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes, encounter.DATE as encounter_date"
+  select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, 
+            patient.gender, encounter.DESCRIPTION as encounter_description, 
+            encounter.REASONDESCRIPTION as notes, encounter.DATE as encounter_date"
   from <- "FROM [synthetic.patients] as patient"
   ljoin <- "LEFT JOIN [synthetic.encounters] as encounter ON encounter.PATIENT = patient.patient"
   where <- paste0("WHERE patient.gender = '", gender, "' and encounter.DATE >= '", date,"'")
@@ -194,7 +199,7 @@ SUB_QUERY_TABLE <-
 
 ### Method 4: Use a local/in-memory database management system to run SQL queries
 
-Using datatables already read into memory of R, and create a local database to use SQL queries to query from.
+Usingdata tables already read into memory of R, and create a local database to use SQL queries to query from.
 
 ```{r message=FALSE, warning=FALSE}
 # Create an in-memory Database Management System
@@ -206,7 +211,8 @@ duckdb_register(con, name = "synthetic_patients", df = patients)
 
 # write your query in SQL
 select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender,
-encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes, encounter.DATE as encounter_date"
+          encounter.DESCRIPTION as encounter_description, encounter.REASONDESCRIPTION as notes, 
+          encounter.DATE as encounter_date"
 from <- "FROM synthetic_patients as patient"
 ljoin <- "LEFT JOIN synthetic_encounters as encounter ON encounter.PATIENT = patient.patient"
 where <- "WHERE patient.gender like 'M' and encounter.DATE >= '2015-01-01'"
