@@ -39,6 +39,7 @@ con <- dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.d
 
 2.  Can use the Connections tab - Screenshot of VINCI's Connection Tab
 
+
 3.  Can use the VINCI Library (exclusive to VINCI workspace) - broken as of 10/10/2023 :(
 
 ```{r message=FALSE, warning=FALSE}
@@ -201,7 +202,7 @@ Usingdata tables already read into memory of R, and create a local database to u
 # Create an in-memory Database Management System
 con <- dbConnect(duckdb())
 
-# Register R dataframes as a virtual table in the 
+# Register R dataframes as a virtual table in the. Make sure to run db_create.R prior
 duckdb_register(con, name = "synthetic_encounters", df = encounters)
 duckdb_register(con, name = "synthetic_patients", df = patients)
 
