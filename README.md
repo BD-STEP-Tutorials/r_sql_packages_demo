@@ -36,4 +36,4 @@ In RStudio, use the File menu to open the `/workspaces`, folder and then browse 
 * [Dev Containers](https://containers.dev/) - Overview and specification
 * [Dev Containers in Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) - Remote-Containers extension 
 * [Visual Studio Code](https://code.visualstudio.com/) - Free editor available for Windows, Mac and Linux
-* [Pima Indians Diabetes Database](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database) - Predict the onset of diabetes based on diagnostic measures
+* [Synthetic Medical Dataset](https://www.kaggle.com/datasets/imtkaggleteam/synthetic-medical-dataset?select=encounters.csv) - Used to demonstrate a OMOP-light dataset experience
