@@ -235,3 +235,15 @@ dbDisconnect(con, shutdown=TRUE)
 # Check out the variable
 PATIENT_COHORT_4
 ```
+
+### Other Popular Libraries (also available in VINCI)
+
+-   [RSQL](https://cran.r-project.org/web/packages/RSQL/vignettes/rsql.html)
+
+-   [RSQLite](https://rsqlite.r-dbi.org/)
+
+-   [RMySQL](https://cran.r-project.org/web/packages/RMySQL/index.html)
+
+-   [RPostgreSQL](https://cran.r-project.org/web/packages/RPostgreSQL/index.html)
+
+-   [sqldf](https://cran.r-project.org/web/packages/sqldf/sqldf.pdf)
