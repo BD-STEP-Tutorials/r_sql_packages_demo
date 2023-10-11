@@ -39,11 +39,11 @@ con <- DBI::dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthe
 
 2.  Can use the Connections tab (screenshot from inside VINCI)
 
-Established Connections to Database
+List of Established Connections to Data Sources
 
 <img src="/workspaces/R_SQL_Demo/misc/img/Connection-1.PNG" width="350"/>
 
-New Connection to available Databases
+Create New Connection to available Data Sources
 
 <img src="/workspaces/R_SQL_Demo/misc/img/Connection-2.PNG" width="350"/>
 
@@ -94,6 +94,8 @@ head(PATIENT_COHORT_1)
 You're not always able to write a SQL statement in a dedicated chunk. For instance, you might be looping through some data and need to execute a SQL query based on a variable value. This means you'd need to programmatically change the SQL query, which is best done with the R script.
 
 Though not required for this example we'll demo how to build the SQL query in multiple pieces and then join them together as a single piece of text. This will allow us to loop through and modify the method if you're making use of loops or other R objects.
+
+Can be done in either .R or .Rmd file.
 
 ```{r message=FALSE, warning=FALSE}
 select <- "SELECT patient.patient, patient.birthdate, patient.race, patient.ethnicity, patient.gender, 
@@ -166,16 +168,20 @@ PATIENT_COHORT_3
 2.  compute(): executes a query and stores the results in a temporary table in the database based on the result of the query.
 
 ```{r message=FALSE, warning=FALSE}
+DBI::dbListTables(conn = con) # show the current tables in the connected database
+```
+
+```{r message=FALSE, warning=FALSE}
 #DBI::dbRemoveTable(conn = con, name="dim.encounter_desc")
 
 dplyr::tbl(src = con, from = "synthetic.encounters") %>%
 dplyr::select(CODE, DESCRIPTION) %>%
-dplyr:: group_by(CODE, DESCRIPTION) %>% 
-dplyr:: distinct() %>%
+dplyr::group_by(CODE, DESCRIPTION) %>% 
+dplyr::distinct() %>%
 dplyr::compute(name="dim.encounter_desc")
 ```
 
-Checking the current list of tables within our SQLite Database
+Checking the current list of tables within our connected Database
 
 ```{r message=FALSE, warning=FALSE}
 DBI::dbListTables(conn = con)
