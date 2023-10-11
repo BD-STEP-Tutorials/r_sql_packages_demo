@@ -27,7 +27,7 @@ library(duckdb) # For creating local duckdb databases in local memory
 0.  Initialize Databases (only for Codespace)
 
 ```{r message=FALSE, warning=FALSE}
-source("db_create.R")
+source("db_create.R") # Creates a generic database file (.db) to store data and replicate access to a CDW
 ```
 
 1.  Manually Create the Connection
