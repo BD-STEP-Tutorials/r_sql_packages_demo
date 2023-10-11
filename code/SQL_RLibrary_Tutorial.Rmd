@@ -25,7 +25,7 @@ library(duckdb) # For creating local duckdb databases in local memory
 
 ## Making the Connection
 
-0.  Initialize Databases in Codespace
+0.  Initialize Databases (only for Codespace)
 
 ```{r message=FALSE, warning=FALSE}
 source("db_create.R")
@@ -37,7 +37,7 @@ source("db_create.R")
 con <- DBI::dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.db", timeout = 10)
 ```
 
-2.  Can use the Connections tab - Screenshot of VINCI's Connection Tab
+2.  Can use the Connections tab (screenshot from inside VINCI)
 
 Established Connections to Database
 
