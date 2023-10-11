@@ -34,7 +34,7 @@ source("db_create.R")
 1.  Manually Create the Connection
 
 ```{r message=FALSE, warning=FALSE}
-con <- dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.db", timeout = 10)
+con <- DBI::dbConnect(RSQLite::SQLite(), "/workspaces/R_SQL_Demo/database/synthetic.db", timeout = 10)
 ```
 
 2.  Can use the Connections tab - Screenshot of VINCI's Connection Tab
@@ -48,6 +48,7 @@ New Connection to available Databases
 <img src="/workspaces/R_SQL_Demo/misc/img/Connection-2.PNG" width="350"/>
 
 3.  Can use the VINCI Library (exclusive to VINCI workspace) - broken as of 10/11/2023 :(
+    -   Checkout VINCI R Academy for more information
 
 ```{r message=FALSE, warning=FALSE}
 #library(VINCI)
@@ -78,7 +79,7 @@ WHERE
    patient.gender like 'M' and encounter.DATE >= '2015-01-01' 
 ```
 
-Note: Square brackets required due to a period (.) in the table name.
+Note: Square brackets required around the table names due to a period (.) being included.
 
 RStudio can natively read SQL script when it's in a markdown chunk set to '{sql}'. 'output.var' sets the name of the data frame to store the results in, which we've called 'Temp_Table'. The text is the SQL script required to retrieve and filter the data from the table(s) in our database.
 
