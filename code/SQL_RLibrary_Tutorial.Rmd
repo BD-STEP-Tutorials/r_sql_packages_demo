@@ -78,6 +78,8 @@ WHERE
    patient.gender like 'M' and encounter.DATE >= '2015-01-01' 
 ```
 
+Note: Square brackets required due to a period (.) in the table name.
+
 RStudio can natively read SQL script when it's in a markdown chunk set to '{sql}'. 'output.var' sets the name of the data frame to store the results in, which we've called 'Temp_Table'. The text is the SQL script required to retrieve and filter the data from the table(s) in our database.
 
 You can now work with this data like you would with any other data frame.
@@ -203,7 +205,7 @@ SUB_QUERY_TABLE <-
 
 ### Method 4: Use a local/in-memory database management system to run SQL queries
 
-Usingdata tables already read into memory of R, and create a local database to use SQL queries to query from.
+Using data tables already read into memory of R, and create a local database to use SQL queries to query from.
 
 ```{r message=FALSE, warning=FALSE}
 # Create an in-memory Database Management System
