@@ -17,7 +17,6 @@ Connecting to and working with SQL databases in R generally requires two package
 library(DBI) # Basic database infrastucture for R, let's R talk to other databases (MS SQL, MySQL, Oracle, Etc.)
 #library(RODBC) # Pre-dates the odbc package, but not compliant with DBI and is no longer in active development
 library(odbc) # Implements DBI's methods for ODBC connections, which MS SQL uses
-library(dbplyr) # Implements the specifics of the dplyr operations for remote SQL table
 library(data.table) # For like function (%like%)
 library(dplyr) # For working with data frame like objects, both in memory and out of memory
 library(duckdb) # For creating local duckdb databases in local memory
@@ -256,3 +255,5 @@ PATIENT_COHORT_4
 -   [RPostgreSQL](https://cran.r-project.org/web/packages/RPostgreSQL/index.html)
 
 -   [sqldf](https://cran.r-project.org/web/packages/sqldf/sqldf.pdf)
+
+-   [dbplyr](https://dbplyr.tidyverse.org/)
