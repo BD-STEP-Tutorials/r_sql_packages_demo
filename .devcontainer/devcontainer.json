@@ -26,9 +26,9 @@
 				"ms-toolsai.jupyter-renderers",
 				"ms-python.python",
 				"ms-python.vscode-pylance",
-				"vsls-contrib.codetour",
+				"vsls-contrib.codetour"
 				// Add SQLite extension
-				"qwtel.sqlite-viewer"
+				// "qwtel.sqlite-viewer"
 			]
 		}
 	},
