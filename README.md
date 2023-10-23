@@ -35,9 +35,9 @@ In order to view this database and its schema with more fidelity, you will need 
 ## Expectations of this Presentation
 -   This presentation will expand upon the *Good Practices in Reproducible Data Science* presented at previous BD-STEP Presentations.
 
--   Using R and SQL this  presentation will explore implementing SQL Queries more seamlessly into your R/Rmd files.
+-   Using R and SQL this presentation will explore implementing SQL Queries more seamlessly into your R/Rmd files.
 
--   The data pipeline will consist of .Rmd files.
+-   The code run will consist of the RMarkdown File [SQL_RLibrary_Tutorial.Rmd](code/SQL_RLibrary_Tutorial.Rmd). 
 
 # Resources and Links
 
