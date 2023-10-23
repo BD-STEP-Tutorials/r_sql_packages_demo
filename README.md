@@ -22,6 +22,16 @@ This will launch RStudio Server in a new window. Log in with the username and pa
 
 In RStudio, use the File menu to open the `/workspaces`, folder and then browse to open the file `devcontainers-rstudio`
 
+## VS Extensions
+
+This presentation will initiate a small generic database file to store data in called "".
+
+In order to view this database and its schema with more fidelity, you will need to intall a VS Extension such as _SQLite_ in order to do so. You can do so by clicking on _Extensions_ on the left toolbar of VS. 
+
+![Extensions](misc/img/VS_Extensions.png)
+
+* NOTE: Some extensions may cause errors in the Codespace, making it unable to recover when it restarts. So be sure to disable the extension when done with it. 
+
 ## Expectations of this Presentation
 -   This presentation will expand upon the *Good Practices in Reproducible Data Science* presented at previous BD-STEP Presentations.
 
